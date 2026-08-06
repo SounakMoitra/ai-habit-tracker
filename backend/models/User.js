@@ -52,7 +52,7 @@ userSchema.methods.matchPassword = function (plain) {
 };
 
 // the below is to make sure, the password hash is never sent to the client by accident
-// Strips the password automatically whenever a User document is converted to JSON
+// It Strips the password automatically whenever a User document is converted to JSON
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
