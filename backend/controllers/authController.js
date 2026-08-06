@@ -40,7 +40,7 @@ export const register = async (req, res) => {
 
     const token = signToken(user._id);
 
-    res.status(500).json({ user, token });
+    res.status(201).json({ user, token });
   } catch (err) {
     res.status(500).json({
       message: err.message,
@@ -50,7 +50,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = res.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -84,9 +84,13 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, morningMotivation } = req.body;
 
-    const user = User.findOne(req.user._id);
+    const user = User.findById(req.user._id);
 
-    if (user !== undefined) {
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (name !== undefined) {
       user.name = name;
       user.avatar = name.charAt(0).toUpperCase();
     }
@@ -95,7 +99,7 @@ export const updateProfile = async (req, res) => {
       user.morningMotivation = morningMotivation;
     }
 
-    await user.schemaLevelProjections();
+    await user.save();
 
     res.json({ user });
   } catch (err) {
