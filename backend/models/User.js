@@ -38,8 +38,14 @@ userSchema.pre("save", async function () {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  // next();
 });
+// userSchema.pre("save", async function (next) {  -> do not use next here
+//   if (!this.isModified("password")) return next();
+
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+//   next(); --> this causes errors
+// });
 
 userSchema.methods.matchPassword = function (plain) {
   return bcrypt.compare(plain, this.password);
