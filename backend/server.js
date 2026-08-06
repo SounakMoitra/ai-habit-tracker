@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorHandler.js";
 import { connectDB } from "./config/db.js";
+import authRoutes from "./routes/auth.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -48,6 +49,8 @@ app.get("/api/health", (req, res) => {
     time: new Date().toISOString(),
   });
 });
+
+app.use("/api/auth", authRoutes);
 
 app.use(notFound); // handles unknown routes
 app.use(errorHandler); // processes all application errors
